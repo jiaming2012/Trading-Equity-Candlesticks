@@ -1,0 +1,1 @@
+This project will serve to use HTTP POST requests to log equity data across multiple trading accounts into a database. The equity will be logged as candlesticks- i.e. each data entry will have the following data points: (timestamp, open, close, low, high.
