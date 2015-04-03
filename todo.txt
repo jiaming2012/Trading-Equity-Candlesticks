@@ -1,0 +1,18 @@
+.getJSON
+
+- EA should use GET statement ... or be returned after POST statement telling it how long to run the next candlestick
+- Schema should have a close time
+- Admin should be able to control close time per account
+- Admin should have a last updated since button
+- Highcharts -> Intraday candles ... Export-CSV-XLS plugin
+     --> pointStart: Date.UTC(2004, 4, 31),
+     --> pointInterval: Number. For example, if a series contains one value each day, set pointInterval: 24 * 3600 * 1000.
+     --> plotOptions : ohlc : set settings (e.g. - color)
+     --> gapSize: 5,
+     --> 
+     --> allowPointSelect: true
+
+Django template should identify breaks and load: check if distance between start times >= X mins
+
+MQL4
+ OnInit() -> calculate first candle, then break to OnTimer() at first candle's close
