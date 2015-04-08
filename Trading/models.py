@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ModelForm
 
 class Account(models.Model):
     acct_num = models.IntegerField()
@@ -11,7 +12,14 @@ class Account(models.Model):
 class Equity(models.Model):
     acct_id = models.ForeignKey(Account)
     timestamp = models.DateTimeField('dbtime')
+    open_lots = models.DecimalField(max_digits=6, decimal_places=2)
     equity_open = models.DecimalField(max_digits=10, decimal_places=2)
     equity_close = models.DecimalField(max_digits=10, decimal_places=2)
     equity_low = models.DecimalField(max_digits=10, decimal_places=2)
     equity_high = models.DecimalField(max_digits=10, decimal_places=2)
+
+class EquityForm(ModelForm):
+    class Meta:
+        model = Equity
+        fields = ['equity_open']
+	   
