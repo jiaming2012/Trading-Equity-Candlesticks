@@ -18,7 +18,7 @@ def home(request):
 #    for e in a.equity_set.all():
 #	ret += "%s=%s<br>" % (e.timestamp, e.equity_close)
 #
-    return HttpResponse("Welcome")
+    return HttpResponse("Welcome :)")
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
