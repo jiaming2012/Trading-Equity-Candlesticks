@@ -8,7 +8,8 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     #url(r'^(?P<acct_num>\d+)/(?P<acct_server>.*)/$', views.set_equity, name='set_equity'),
     #url(r'^(\d+)/(.*)/$', views.MyView, name='test_equity'),
-    url(r'^insert/equity/', views.equity_test, name='equity_test'),
+    url(r'^$', views.home, name='home'),
+    url(r'^accounts/login', views.login, name='login'),
+    url(r'^accounts/setequity', views.setequity, name='setequity'),
     url(r'^admin/', include(admin.site.urls)),
-    
 )
