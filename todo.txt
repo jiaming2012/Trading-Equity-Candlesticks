@@ -5,12 +5,21 @@
 - Admin should be able to control close time per account
 - Admin should have a last updated since button
 - Highcharts -> Intraday candles ... Export-CSV-XLS plugin
-     --> pointStart: Date.UTC(2004, 4, 31),
-     --> pointInterval: Number. For example, if a series contains one value each day, set pointInterval: 24 * 3600 * 1000.
      --> plotOptions : ohlc : set settings (e.g. - color)
-     --> gapSize: 5,
      --> 
      --> allowPointSelect: true
+     data: [
+            [Date.UTC(2010, 0, 1), 29.9],
+            [Date.UTC(2010, 0, 2), 71.5],
+            [Date.UTC(2010, 0, 3), 106.4],
+            [Date.UTC(2010, 0, 6), 129.2],
+            [Date.UTC(2010, 0, 7), 144.0],
+            [Date.UTC(2010, 0, 8), 176.0]
+
+       for gaps insert NULL Values
+       gapSize: 5,
+
+       Flags -> text: .. 
 
 Django template should identify breaks and load: check if distance between start times >= X mins
 
