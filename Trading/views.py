@@ -20,8 +20,15 @@ def myjavascript(request):
 
     return HttpResponse(template.render(context))
 
-def home(request):
-    equity = Equity.objects.order_by('-timestamp')
+def homepage(request):
+    accounts = Account.objects.all()
+    template = loader.get_template('homepage.html')
+    context = RequestContext(request, {'accounts': accounts})
+    return HttpResponse(template.render(context))
+
+def candle_chart(request, account_number):
+    account = get_object_or_404(Account, acct_num = account_number)
+    equity = account.equity_set.order_by('-timestamp')
 
     template = loader.get_template('tester.html')
     context = RequestContext(request, {'equity': equity})    
