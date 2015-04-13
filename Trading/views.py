@@ -1,11 +1,12 @@
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
-from models import Account, EquityForm
+from models import Account, Equity
 from django.views.generic import View
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from rest_framework.response import Response
+from django.template import RequestContext, loader
 
 def validate(myDict, keyList):
     for key in keyList:
@@ -13,12 +14,19 @@ def validate(myDict, keyList):
 	    return "POST keys = %s does not match expected keys = %s" % (myDict.keys(), keyList)
     return True
 
+def myjavascript(request):
+    template = loader.get_template('jscript.js')
+    context = RequestContext(request, {'equity':'5000'})
+
+    return HttpResponse(template.render(context))
+
 def home(request):
-#    ret = ''
-#    for e in a.equity_set.all():
-#	ret += "%s=%s<br>" % (e.timestamp, e.equity_close)
-#
-    return HttpResponse("Welcome :)")
+    equity = Equity.objects.order_by('-timestamp')
+
+    template = loader.get_template('tester.html')
+    context = RequestContext(request, {'equity': equity})    
+
+    return HttpResponse(template.render(context))
 
 @csrf_exempt
 @api_view(['GET', 'POST'])

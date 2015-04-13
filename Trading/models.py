@@ -13,10 +13,10 @@ class Equity(models.Model):
     acct_id = models.ForeignKey(Account)
     timestamp = models.DateTimeField('dbtime')
     open_lots = models.DecimalField(max_digits=6, decimal_places=2)
-    equity_open = models.DecimalField(max_digits=10, decimal_places=2)
-    equity_close = models.DecimalField(max_digits=10, decimal_places=2)
-    equity_low = models.DecimalField(max_digits=10, decimal_places=2)
-    equity_high = models.DecimalField(max_digits=10, decimal_places=2)
+    equity_open = models.IntegerField()
+    equity_close = models.IntegerField()
+    equity_low = models.IntegerField()
+    equity_high = models.IntegerField()
 
 class EquityForm(ModelForm):
     class Meta:

@@ -1,0 +1,8 @@
+p {
+   color: green;
+}
+
+#datatable {
+	text-indent: 100%;
+	overflow: hidden;
+}
