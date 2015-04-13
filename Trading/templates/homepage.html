@@ -1,0 +1,58 @@
+
+<script>
+    var createEquityRow = function(name, equity_start, equity_current, id) 
+    {
+      var table = document.getElementById(id);
+      var row = table.insertRow();
+      var cell1 = row.insertCell(0).innerHTML = name;
+      
+      var percentage = 0;
+      
+      if(equity_start > 0)
+        percentage = (equity_current - equity_start) / equity_start;
+      
+      row.insertCell(1).innerHTML = equity_start;
+      row.insertCell(2).innerHTML = equity_current - equity_start;
+      row.insertCell(3).innerHTML = percentage.toFixed(3);                         
+    }
+</script>
+<h1>Colewood Capital</h1>
+{% for a in accounts %}
+  <p>
+  {% if a.acct_nickname %}
+      {{a.acct_nickname}}
+  {% else %}
+      {{a.acct_name}}
+  {% endif %}
+  
+   (#{{a.acct_num}})
+  <p>
+       
+  <table id="{{a.acct_num}}">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Start</th>
+        <th>Profit</th>
+        <th>Return</th>
+      </tr>
+    </thead>
+    <tbody>
+      <script>
+          createEquityRow("Daily", {{a.equity_at_day_start}}, {{a.equity_now}}, {{a.acct_num}});
+      </script>
+      <script>
+          createEquityRow("Weekly", {{a.equity_at_week_start}}, {{a.equity_now}}, {{a.acct_num}});
+      </script>
+      <script>
+          createEquityRow("Monthly", {{a.equity_at_month_start}}, {{a.equity_now}}, {{a.acct_num}});
+      </script>
+      <script>
+          createEquityRow("All Time", {{a.equity_at_start}}, {{a.equity_now}}, {{a.acct_num}});
+      </script>
+    </tbody>
+  </table>
+  
+  <p>Tracking since: {{a.start_date}}</p>
+  
+{% endfor %}
