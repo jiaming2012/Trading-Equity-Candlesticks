@@ -9,16 +9,18 @@
       var percentage = 0;
       
       if(equity_start > 0)
-        percentage = (equity_current - equity_start) / equity_start;
+        percentage = ((equity_current - equity_start) / equity_start) * 100;
       
-      row.insertCell(1).innerHTML = equity_start;
-      row.insertCell(2).innerHTML = equity_current - equity_start;
-      row.insertCell(3).innerHTML = percentage.toFixed(3);                         
-    }
+      row.insertCell(1).innerHTML = "$" + equity_start.toLocaleString();
+      row.insertCell(2).innerHTML = "$" + (equity_current - equity_start).toLocaleString();
+      row.insertCell(3).innerHTML = percentage.toFixed(1) + "%";                         
+    };
 </script>
+
 <h1>Colewood Capital</h1>
+
 {% for a in accounts %}
-  <p>
+  <h2>
   {% if a.acct_nickname %}
       {{a.acct_nickname}}
   {% else %}
@@ -26,15 +28,17 @@
   {% endif %}
   
    (#{{a.acct_num}})
-  <p>
-       
-  <table id="{{a.acct_num}}">
+  </h2>
+  
+  <h3>Equity: <span style="padding-left:3em">$ {{a.equity_now}}</span></h3>
+
+  <table style="width:20%" id="{{a.acct_num}}">
     <thead>
       <tr>
-        <th></th>
-        <th>Start</th>
-        <th>Profit</th>
-        <th>Return</th>
+        <th align="left"></th>
+        <th align="left">Start</th>
+        <th align="left">Profit</th>
+        <th align="left">Return</th>
       </tr>
     </thead>
     <tbody>
@@ -53,6 +57,6 @@
     </tbody>
   </table>
   
-  <p>Tracking since: {{a.start_date}}</p>
+  <p>Tracking since: {{a.start_date}} GMT</p>
   
 {% endfor %}

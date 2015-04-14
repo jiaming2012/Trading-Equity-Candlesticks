@@ -12,7 +12,7 @@ class Account(models.Model):
     acct_server = models.CharField(max_length=100)
     nickname = models.CharField(max_length=100, default='')
     Start = models.TimeField(default='17:00:00')
-    EOD = models.TimeField(default='17:00:00')    
+    EOD = models.TimeField(default='21:00:00')    
     
     def equity_at_day_start(self, days_ago=1):
 	candle_list = self.equity_set.filter(timestamp__gte = day_start(days_ago))[:1]
@@ -34,6 +34,9 @@ class Account(models.Model):
 	candle = self.equity_set.latest('timestamp')
 	return candle.equity_close
     
+    def equity_now_currency(self):
+	return format(self.equity_now(), '')
+	
     def start_date(self):
 	candle = self.equity_set.earliest('timestamp')
 	return candle.timestamp
@@ -57,8 +60,12 @@ class EquityForm(ModelForm):
 
 def day_start(days_ago=1): 	#Time: EOD
     dt = datetime.datetime.utcnow()
-    dt -= datetime.timedelta(days=days_ago)
-    start_date = dt.replace(hour=17, minute=0, second=0, microsecond=0)
+    
+    if dt.hour < 21:
+    	dt -= datetime.timedelta(days=days_ago)
+    
+    start_date = dt.replace(hour=21, minute=0, second=0, microsecond=0)
+    
     return start_date
 
 def week_start(weeks_ago=0): 	#Time: Start

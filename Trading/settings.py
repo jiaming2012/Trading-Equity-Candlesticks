@@ -26,6 +26,13 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Application caching
+CACHES = {
+    'default': {
+	'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+	'LOCATION': '/var/tmp/django_cache',
+    }
+}
 
 # Application definition
 
