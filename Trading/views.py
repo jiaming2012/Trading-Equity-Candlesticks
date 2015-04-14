@@ -21,6 +21,12 @@ def myjavascript(request):
 
     return HttpResponse(template.render(context))
 
+def homepagedep(request):
+    accounts = Account.objects.all()
+    template = loader.get_template('homepage.html')
+    context = RequestContext(request, {'accounts': accounts})
+    return HttpResponse(template.render(context))
+
 def homepage(request):
     accounts = Account.objects.all()
     template = loader.get_template('homepage.html')
