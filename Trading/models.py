@@ -47,7 +47,7 @@ class Account(models.Model):
 class Equity(models.Model):
     acct_id = models.ForeignKey(Account)
     timestamp = models.DateTimeField('dbtime')
-    open_lots = models.DecimalField(max_digits=6, decimal_places=2)
+    open_lots = models.FloatField()
     equity_open = models.IntegerField()
     equity_close = models.IntegerField()
     equity_low = models.IntegerField()
