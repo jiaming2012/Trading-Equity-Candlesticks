@@ -1,5 +1,4 @@
 {% load static %}
-
 <head>
 <script type="text/javascript" src="{% static 'js/jquery-1.9.1.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/highstock.js' %}"></script>
@@ -10,125 +9,88 @@
 <script>
 	$(function () {
 
-		//var data = []
-
-        // split the data set into ohlc and volume
-        var ohlc = [],
-            volume = [];
-
-		var last_tstamp = 0;
+    var ohlc = {{candle}};
+    var volume = {{lots}};
+   
+    // Create the chart
+    $('#container').highcharts('StockChart', {
 			
-        {% for e in equity reversed %}
-			var tstamp = {{ e.timestamp|date:"U" }} * 1000;		
-			console.log("compare: " + tstamp + " | " + last_tstamp);
-			if(tstamp > last_tstamp)
- 			{	
-		    	ohlc.push([
-				    tstamp,
-					{{ e.equity_open }},
-					{{ e.equity_high }},
-					{{ e.equity_low }},        
-					{{ e.equity_close }}
-				]);
-
-				console.log(ohlc[ohlc.length-1]);
-
-				volume.push([	
-					{{ e.timestamp|date:"U" }} * 1000,
-					{{ e.open_lots }}
-				]);
-				
-				last_tstamp = tstamp;
-			}
-		{% endfor %}
-
-		// Create a timer
-		var start = +new Date()
-		
-        // Create the chart
-        $('#container').highcharts('StockChart', {
-			
-			chart: {
-				events: {
-					load: function() {
-						if(!window.isComparing) {
-							this.setTitle(null, {
-								text: 'Built chart in ' + (new Date() - start) + 'ms'
-							});
-						}
-					}
-				},
-				zoomType: 'x'
-			},
-
-            rangeSelector: {
+     rangeSelector: {
 				buttons: [{
-
+ 
+					type: 'minute',
+					count: 15,
+					text: 'M15'
+				},{
+					type: 'hour',
+					count: 1,
+					text: 'H1'
+				},{
+					type: 'hour',
+					count: 4,
+					text: 'H4'
+				},{
+					type: 'hour',
+					count: 12,
+					text: 'H12'
+				},{    
 					type: 'day',
-					count: 3,
-					text: '3d'
+					count: 1,
+					text: 'D1'
 				}, {
 					type: 'week',
 					count: 1,
-					text: '1w'
-	
-
+					text: 'W1'
+				}, {
+					type: 'all',
+					text: 'ALL'
 				}],
+        
+     selected: 4
+     },
+    
+    title: {
+      text: 'Colewood Equity'
+    },
 
-                selected: 1
-            },
-
-            title: {
-                text: 'Colewood Equity'
-            },
-
-            yAxis: [{
-            //    labels: {
-             //       align: 'right',
-             //       x: -3
-            //    },
-                title: {
-                    text: 'Equity'
-                },
-                height: '70%',
-             //   lineWidth: 2
-            }, {
-            //    labels: {
-             //       align: 'right',
-            //        x: -3
-            //    },
-                title: {
-                    text: 'Lots'
-                },
-                top: '72%',
-                height: '25%',
-                offset: 15,
-                lineWidth: 2
-            }],
-
-            series: [{
-                type: 'candlestick',
-                name: 'Equity',
-                data: ohlc,
-                dataGrouping: {
-                    approximation: "ohlc"
-                }
-            }, {
-                type: 'area',
-                name: 'Lots',
-                data: volume,
-                yAxis: 1,
-                dataGrouping: {
-                    approximation: "average"
-               } 
-            }]
-        });
+    yAxis: [{
  
+    title: {
+      text: 'Equity'
+    },
+    height: '70%',
+    }, {
+    title: {
+    text: 'Lots'
+    },
+    top: '72%',
+    height: '25%',
+    offset: 15,
+    lineWidth: 2
+}],
+
+   series: [{
+     type: 'candlestick',
+     name: 'Equity',
+     data: ohlc,
+     dataGrouping: {
+        approximation: "ohlc"
+       }
+     }, 
+     {
+     type: 'area',
+     name: 'Lots',
+     data: volume,
+     yAxis: 1,
+     dataGrouping: {
+       approximation: "average"
+       } 
+     }]
+  });
 });
+
 </script>
 
 <body>
 	<div id="container" style="min-width: 310px; height: 850px; margin: 0 auto"></div>
-
-	
 </body>

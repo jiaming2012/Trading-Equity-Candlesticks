@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from rest_framework.response import Response
 from django.template import RequestContext, loader
+import json
 
 def validate(myDict, keyList):
     for key in keyList:
@@ -20,6 +21,12 @@ def myjavascript(request):
 
     return HttpResponse(template.render(context))
 
+def homepagedep(request):
+    accounts = Account.objects.all()
+    template = loader.get_template('homepage.html')
+    context = RequestContext(request, {'accounts': accounts})
+    return HttpResponse(template.render(context))
+
 def homepage(request):
     accounts = Account.objects.all()
     template = loader.get_template('homepage.html')
@@ -28,10 +35,20 @@ def homepage(request):
 
 def candle_chart(request, account_number):
     account = get_object_or_404(Account, acct_num = account_number)
-    equity = account.equity_set.order_by('-timestamp')
-
+    equity = account.equity_set.order_by('timestamp')
+    
+    #iterate equity list to JSON
+    my_list_candle = []
+    my_list_volume = []
+    for e in equity:
+	tstamp = int(e.timestamp.strftime('%s000'))
+	my_list_candle.append([tstamp, e.equity_open, e.equity_high, e.equity_low, e.equity_close])
+	my_list_volume.append([tstamp, e.open_lots])
+    
+    data1 = json.dumps(my_list_candle)
+    data2 = json.dumps(my_list_volume)
     template = loader.get_template('tester.html')
-    context = RequestContext(request, {'equity': equity})    
+    context = RequestContext(request, {'equity': equity, 'candle': data1, 'lots': data2})    
 
     return HttpResponse(template.render(context))
 
