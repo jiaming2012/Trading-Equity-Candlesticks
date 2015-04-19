@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
-from models import Account, Equity
+from models import *
 from django.views.generic import View
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
@@ -21,9 +21,9 @@ def myjavascript(request):
 
     return HttpResponse(template.render(context))
 
-def homepagedep(request):
+def homepagedev(request):
     accounts = Account.objects.all()
-    template = loader.get_template('homepage.html')
+    template = loader.get_template('homepagedev.html')
     context = RequestContext(request, {'accounts': accounts})
     return HttpResponse(template.render(context))
 
@@ -31,6 +31,26 @@ def homepage(request):
     accounts = Account.objects.all()
     template = loader.get_template('homepage.html')
     context = RequestContext(request, {'accounts': accounts})
+    return HttpResponse(template.render(context))
+
+def comparison_chart(request):
+    account = Account.objects.all()
+    series = []
+
+    for acct in account:
+	name = acct.nickname if acct.nickname else acct.acct_name
+	equity = acct.equity_set.filter(timestamp__gte = week_start())
+	data = []
+
+	for candle in equity:
+	    tstamp = int(candle.timestamp.strftime('%s000'))
+	    data.append([tstamp, candle.equity_close])
+
+        series.append({'name':name , 'data': data})
+
+    template = loader.get_template('comparison.html')
+    context = RequestContext(request, {'seriesData': json.dumps(series)})
+
     return HttpResponse(template.render(context))
 
 def candle_chart(request, account_number):
@@ -48,7 +68,7 @@ def candle_chart(request, account_number):
     data1 = json.dumps(my_list_candle)
     data2 = json.dumps(my_list_volume)
     template = loader.get_template('tester.html')
-    context = RequestContext(request, {'equity': equity, 'candle': data1, 'lots': data2})    
+    context = RequestContext(request, {'acct': account, 'equity': equity, 'candle': data1, 'lots': data2})    
 
     return HttpResponse(template.render(context))
 

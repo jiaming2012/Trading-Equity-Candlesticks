@@ -14,17 +14,34 @@ class Account(models.Model):
     Start = models.TimeField(default='17:00:00')
     EOD = models.TimeField(default='21:00:00')    
     
-    def equity_at_day_start(self, days_ago=1):
+    def equity_at_day_start(self, days_ago=0):
 	candle_list = self.equity_set.filter(timestamp__gte = day_start(days_ago))[:1]
-	return candle_list[0].equity_open
-   
+	
+	#handles weekend session gaps
+	if len(candle_list) == 0:
+	    candle_list = self.equity_set.filter(timestamp__gte = last_thursday_start())[:1]	
+	
+	
+	if len(candle_list) > 0:	
+	    return candle_list[0].equity_open
+	else:
+	    return None   
+
     def equity_at_week_start(self, weeks_ago=0):
 	candle_list = self.equity_set.filter(timestamp__gte = week_start(weeks_ago))[:1]
-	return candle_list[0].equity_open
+	
+	if len(candle_list) > 0:
+	    return candle_list[0].equity_open
+ 	else:
+	    return None
 
     def equity_at_month_start(self):
 	candle_list = self.equity_set.filter(timestamp__gte = month_start())[:1]
-	return candle_list[0].equity_open
+	
+	if len(candle_list) > 0:
+	    return candle_list[0].equity_open
+	else:
+	    return None
     
     def equity_at_start(self):
 	candle = self.equity_set.earliest('timestamp')
@@ -58,24 +75,40 @@ class EquityForm(ModelForm):
         model = Equity
         fields = ['equity_open']
 
-def day_start(days_ago=1): 	#Time: EOD
+def day_start(days_ago=0): 	#Time: EOD
     dt = datetime.datetime.utcnow()
-    
+
     if dt.hour < 21:
-    	dt -= datetime.timedelta(days=days_ago)
-    
+    	dt -= datetime.timedelta(days=days_ago+1)
+    else:
+	dt -= datetime.timedelta(days=days_ago)
+
     start_date = dt.replace(hour=21, minute=0, second=0, microsecond=0)
+   
+    return start_date
+
+
+def last_thursday_start():
+    dt = datetime.datetime.utcnow()
+
+    while dt.weekday() != 3:
+	dt -= datetime.timedelta(days=1)
+
+    start_date = dt.replace(hour=17, minute=0, second=0, microsecond=0)
     
     return start_date
+
 
 def week_start(weeks_ago=0): 	#Time: Start
     dt = datetime.datetime.utcnow()
     day = dt.isoweekday()
     start_date = dt - datetime.timedelta(weeks=weeks_ago, days=day)
     start_date = start_date.replace(hour=17, minute=0, second=0, microsecond=0)
+    
     return start_date
 
 def month_start():		#Time: EOD
     dt = datetime.datetime.utcnow()
     start_date = dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    
     return start_date

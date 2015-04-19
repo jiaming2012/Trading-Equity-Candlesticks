@@ -1,0 +1,22 @@
+p {
+  color: gray;
+}
+
+.header {
+  font-weight: bold;
+}
+
+.tracking {
+  padding: 1em;
+}
+
+#footer {
+
+  position: fixed;
+
+  bottom: 0;
+
+  width: 100%;
+
+  height: 150px; /* choose any height */
+}

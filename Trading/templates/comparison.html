@@ -1,0 +1,83 @@
+{% load static %}
+<head>
+<script type="text/javascript" src="{% static 'js/jquery-1.9.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/highstock.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/data.js' %}"></script>
+</head>
+
+<script>
+  $(function () {
+     
+    $('#container').highcharts('StockChart', {
+
+     rangeSelector: {
+				buttons: [{    
+					type: 'hour',
+					count: 1,
+					text: 'H1'
+				},{    
+					type: 'hour',
+					count: 4,
+					text: 'H4'
+				},{    
+					type: 'day',
+					count: 1,
+					text: 'D1'
+				},{    
+					type: 'day',
+					count: 3,
+					text: 'D3'
+				}, {
+					type: 'week',
+					count: 1,
+					text: 'W1'
+				}, {
+					type: 'month',
+					count: 1,
+					text: 'MN1'
+				}, {
+					type: 'all',
+					text: 'ALL'
+				}],
+        
+     selected: 2
+     },
+
+                yAxis: {
+                    labels: {
+                        formatter: function () {
+                            return (this.value > 0 ? ' + ' : '') + this.value + '%';
+                        }
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 2,
+                        color: 'silver'
+                    }]
+                },
+
+                plotOptions: {
+                    series: {
+                        compare: 'percent'
+                    }
+                },
+
+                tooltip: {
+                    pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+                    valueDecimals: 2
+                },
+                
+                credits: {
+                    text: 'Colewood Capital'
+                },
+                
+                {% autoescape off %}
+                series: {{seriesData}}
+                {% endautoescape %}
+     });
+});
+</script>
+
+<body>
+	<div id="container" style="height: 100%; margin: 0 auto"></div>
+</body>

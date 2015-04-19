@@ -1,0 +1,267 @@
+  {% load static %}
+<head>
+          <meta charset="utf-8">
+          <meta-name="viewport" content="width=device-width">
+          <title>Colewood Equity</title>
+          <link rel="stylesheet" href="{% static 'css/foundation.css' %}">
+          <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+          <script src="{%static 'js/vendor/modernizr.js' %}"></script>
+          
+          
+</head>       
+
+<script>
+  function numberWithCommas(x) {
+     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+    
+  function equityChange(past, present) {
+     return numberWithCommas(present - past);
+  };
+ 
+  function equityPercentageChange(past, present) {
+     var percentage = 0;
+     
+     if(past > 0)
+      percentage = ((present - past) / past) * 100;
+     
+     return percentage.toFixed(1);
+  };
+</script>
+
+
+ <body height="auto">
+   <script src="{% static 'js/vendor/jquery.js' %}"></script>
+   <script src="{% static 'js/vendor/fastclick.js' %}"></script>
+   <script src="{% static 'js/foundation.min.js' %}"></script>
+   <script src="{% static 'js/foundation/foundation.js' %}"></script>
+   <script src="{% static 'js/foundation/foundation.reveal.js' %}"></script>
+                    
+           
+    <div class="fixed">
+      <nav class="top-bar" data-topbar>
+        <ul class="title-area">
+           
+          <li class="name">
+            <h1>
+              <a href="http://www.colewoodcapital.com">
+                Colewood Capital
+              </a>
+            </h1>
+          </li>
+          <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+        </ul>
+     
+        <section class="top-bar-section">
+         
+         <ul class="right has-form">
+           <a href="http://foundation.zurb.com/docs" class="button alert round">Compare All</a>
+         </ul>
+           
+        </section>
+      </nav>
+     </div>
+     
+     <br>
+     <br>
+     <br>
+     
+     {% for acct in accounts %}
+    <div class="row">
+  
+    <div class="small-12 columns">
+      <div class="panel">
+        <a href="#" data-reveal-id="modal-{{acct.acct_num}}">
+          <img src="{% static 'img/icon_chart.jpg' %}" alt="candle-chart" align="right" height="35px" width="35px">        
+        </a>
+        
+        <h2 class="text-center header">
+         {% if acct.acct_nickname %}
+            {{acct.acct_nickname}}
+         {% else %}
+            {{acct.acct_name}}
+         {% endif %}
+        </h2>
+        
+        <h3 class="text-center eq"><em>Equity
+         <span>&#36;<script>document.write(numberWithCommas({{acct.equity_now}}))</script></em></span>
+       </h3>
+
+       
+       <div class="row">
+         <div class="small-3 columns">
+          <h3>
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3 class="header">
+            Start
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3 class="header">
+            &#916; Equity
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3 class="header">
+            Return
+          </h3>
+         </div>
+       </div>
+  
+       {% if acct.equity_at_day_start %}
+       <div class="row">
+         <div class="small-3 columns">
+          <h3 class="header">
+            Daily
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3>
+            <script>document.write(numberWithCommas({{acct.equity_at_day_start}}))</script
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3>
+            <script>document.write(equityChange({{acct.equity_at_day_start}}, {{acct.equity_now}}))</script>
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <script>
+            var percentage = equityPercentageChange({{acct.equity_at_day_start}}, {{acct.equity_now}});
+            var msg = "";
+            
+            if(percentage < 0)
+              msg = "<h3 style='color: red'>" + percentage.toString() + "&#37;</h3>";
+            else 
+              msg = "<h3>" + percentage.toString() + "&#37;</h3>";
+            
+            document.write(msg)</script>
+         </div>
+       </div>
+       {% endif %}
+       
+       
+       {% if acct.equity_at_week_start %}
+       <div class="row">
+         <div class="small-3 columns">
+          <h3 class="header">
+            Weekly
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3>
+            <script>document.write(numberWithCommas({{acct.equity_at_week_start}}))</script
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3>
+            <script>document.write(equityChange({{acct.equity_at_week_start}}, {{acct.equity_now}}))</script>
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <script>
+            var percentage = equityPercentageChange({{acct.equity_at_week_start}}, {{acct.equity_now}});
+            var msg = "";
+            
+            if(percentage < 0)
+              msg = "<h3 style='color: red'>" + percentage.toString() + "&#37;</h3>";
+            else 
+              msg = "<h3>" + percentage.toString() + "&#37;</h3>";
+            
+            document.write(msg)</script>
+         </div>
+       </div>
+       {% endif %}
+       
+       
+       {% if acct.equity_at_month_start %}
+       <div class="row">
+         <div class="small-3 columns">
+          <h3 class="header">
+            Monthly
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3>
+            <script>document.write(numberWithCommas({{acct.equity_at_month_start}}))</script>
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3>
+            <script>document.write(equityChange({{acct.equity_at_month_start}}, {{acct.equity_now}}))</script>
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <script>
+            var percentage = equityPercentageChange({{acct.equity_at_month_start}}, {{acct.equity_now}});
+            var msg = "";
+            
+            if(percentage < 0)
+              msg = "<h3 style='color: red'>" + percentage.toString() + "&#37;</h3>";
+            else 
+              msg = "<h3>" + percentage.toString() + "&#37;</h3>";
+            
+            document.write(msg)</script>
+         </div>
+       </div>
+       {% endif %}
+       
+       
+       {% if acct.equity_at_start %}
+       <div class="row">
+         <div class="small-3 columns">
+          <h3 class="header">
+            All time
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3>
+            <script>document.write(numberWithCommas({{acct.equity_at_start}}))</script>
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <h3>
+            <script>document.write(equityChange({{acct.equity_at_start}}, {{acct.equity_now}}))</script>
+          </h3>
+         </div>
+         <div class="small-3 columns">
+          <script>
+            var percentage = equityPercentageChange({{acct.equity_at_start}}, {{acct.equity_now}});
+            var msg = "";
+            
+            if(percentage < 0)
+              msg = "<h3 style='color: red'>" + percentage.toString() + "&#37;</h3>";
+            else 
+              msg = "<h3>" + percentage.toString() + "&#37;</h3>";
+            
+            document.write(msg)</script>
+         </div>   
+       </div>
+       {% endif %}
+       
+      </div>
+      
+     </div>
+     <p class="tracking">Tracking since: {{acct.start_date}}</p>
+    </div>
+  </div>  
+  
+   </div>
+  
+  <div id="modal-{{acct.acct_num}}" class="reveal-modal" data-reveal aria-labelledby="modalTitle-{{acct.acct_num}}" aria-hidden="false" role="dialog">
+   
+    <div class="flex-video widescreen vimeo">
+     <iframe src="http://50.116.48.28:8000/equity/{{acct.acct_num}}" width="1080" height="720" frameborder="0" allowfullscreen></iframe>
+    </div>
+   <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+  </div> 
+
+  {% endfor %}   
+     
+  <script>
+    $(document).foundation();
+  </script>
+</body>
+
